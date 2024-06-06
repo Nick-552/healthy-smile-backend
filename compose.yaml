@@ -1,9 +1,39 @@
 services:
-  postgres:
-    image: 'postgres:latest'
+  postgresql:
+    image: postgres:16
+    container_name: postgresql
+    restart: always
+    volumes:
+      - postgres:/var/lib/postgresql/data
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      - POSTGRES_DB=database
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
     ports:
-      - '5432'
+      - 5435:5432
+    networks:
+      - backend
+
+#  liquibase-migrations:
+#    image: liquibase/liquibase:4.25
+#    depends_on:
+#      - postgresql
+#    container_name: liquibase
+#    command:
+#      - --changelog-file=master.xml
+#      - --driver=org.postgresql.Driver
+#      - --url=jdbc:postgresql://postgresql:5432/database
+#      - --username=postgres
+#      - --password=postgres
+#      - update
+#    volumes:
+#      - ./migrations:/liquibase/changelog
+#    networks:
+#      - backend
+
+
+networks:
+  backend: { }
+
+volumes:
+  postgres: { }

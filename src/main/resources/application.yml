@@ -1,3 +1,40 @@
+app:
+  base-url: ${BASE_URL}
+
 spring:
   application:
     name: healthy-smile
+  security:
+    user:
+      name: ${ADMIN_NAME}
+      password: ${ADMIN_PASSWORD}
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  liquibase:
+    enabled: false
+  mail:
+    host: smtp.yandex.ru
+    port: 465
+    username: ${HEALTHY_SMILE_EMAIL}
+    password: ${EMAIL_SECRET_KEY}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: false
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+
+springdoc:
+  swagger-ui:
+    path: /swagger
