@@ -1,5 +1,6 @@
-package ru.nick552.healthysmile.controller;
+package ru.nick552.healthysmile.controller.exception;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,8 @@ import ru.nick552.healthysmile.exception.ApiException;
 import java.util.Arrays;
 
 @RestControllerAdvice
-public class ControllerAdvice {
+@Log4j2
+public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiErrorResponse> handleApiException(ApiException e) {
@@ -21,7 +23,6 @@ public class ControllerAdvice {
                 e.getDescription()
         );
     }
-
 
     private ResponseEntity<ApiErrorResponse> createApiErrorResponseEntity(
             Exception e,

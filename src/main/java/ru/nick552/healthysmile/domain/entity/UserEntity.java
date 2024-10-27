@@ -99,11 +99,11 @@ public class UserEntity implements UserDetails {
         return new UserInfo(
                 id,
                 username,
-                email,
-                phone,
                 name,
                 surname,
                 patronymic,
+                email,
+                phone,
                 role
         );
     }

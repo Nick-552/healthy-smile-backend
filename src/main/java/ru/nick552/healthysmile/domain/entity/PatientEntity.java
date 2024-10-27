@@ -1,7 +1,11 @@
 package ru.nick552.healthysmile.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import ru.nick552.healthysmile.model.PatientInfo;
 
 import java.util.Set;
 
@@ -21,5 +25,11 @@ public class PatientEntity extends UserEntity {
     public void addAppointment(AppointmentEntity appointmentEntity) {
         appointmentEntities.add(appointmentEntity);
         appointmentEntity.setPatient(this);
+    }
+
+    public PatientInfo getPatientInfo() {
+        return new PatientInfo(
+                getUserInfo()
+        );
     }
 }

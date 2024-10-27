@@ -38,12 +38,12 @@ public class DoctorEntity extends UserEntity {
         appointmentEntity.setDoctor(this);
     }
 
-    public DoctorInfo getInfo() {
+    public DoctorInfo getDoctorInfo() {
         return new DoctorInfo(
                 getUserInfo(),
                 speciality,
-                URI.create(info),
-                photoLink
+                URI.create(photoLink),
+                info
         );
     }
 

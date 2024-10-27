@@ -12,5 +12,4 @@ public class HealthySmileApplication {
     public static void main(String[] args) {
         SpringApplication.run(HealthySmileApplication.class, args);
     }
-
 }

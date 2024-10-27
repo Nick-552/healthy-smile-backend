@@ -1,9 +1,12 @@
 package ru.nick552.healthysmile.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.nick552.healthysmile.domain.entity.DoctorEntity;
+import ru.nick552.healthysmile.dto.request.AddDoctorRoleRequest;
 import ru.nick552.healthysmile.dto.request.CreateAppointmentRequest;
 import ru.nick552.healthysmile.dto.response.AppointmentDto;
 import ru.nick552.healthysmile.model.DoctorInfo;
@@ -18,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/doctors")
 @CrossOrigin
+@Log4j2
 public class DoctorController {
 
     private final DoctorService doctorService;
@@ -28,31 +32,38 @@ public class DoctorController {
     public List<DoctorInfo> getAll() {
         return doctorService.listAll()
                 .stream()
-                .map(DoctorEntity::getInfo)
+                .map(DoctorEntity::getDoctorInfo)
                 .toList();
     }
 
-    @GetMapping("/filter/")
+    @GetMapping("/filter")
     public List<DoctorInfo> getFiltered(@RequestParam String speciality) {
         return doctorService.listBySpeciality(speciality)
                 .stream()
-                .map(DoctorEntity::getInfo)
+                .map(DoctorEntity::getDoctorInfo)
                 .toList();
     }
 
     @GetMapping("/{id}")
     public DoctorInfo getById(@PathVariable UUID id) {
         return doctorService.findDoctorById(id)
-                .getInfo();
+                .getDoctorInfo();
     }
 
-    @PostMapping("/{doctor_id}/appointments")
+    @PostMapping("/{id}/appointments")
     @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
     public void createAppointment(
             @RequestBody CreateAppointmentRequest createAppointmentRequest,
-            @PathVariable("doctor_id") UUID doctorId
+            @PathVariable("id") UUID doctorId
     ) {
         appointmentService.createAppointment(doctorId, createAppointmentRequest);
+    }
+
+    @PostMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void createDoctor(@RequestBody @Valid AddDoctorRoleRequest addDoctorRoleRequest) {
+        log.info("Creating doctor: {}", addDoctorRoleRequest);
+        doctorService.addDoctor(addDoctorRoleRequest);
     }
 
     @GetMapping("/{doctor_id}/appointments/active")

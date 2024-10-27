@@ -39,7 +39,7 @@ public class AppointmentEntity {
     private String conclusion;
 
     public Boolean isFree() {
-        return patient != null;
+        return patient == null;
     }
 
     public Boolean isOpen() {
@@ -68,7 +68,7 @@ public class AppointmentEntity {
         return new AppointmentDto(
                 id,
                 doctor.getId(),
-                patient.getId(),
+                patient == null ? null : patient.getId(),
                 startDateTime,
                 duration
         );

@@ -16,6 +16,8 @@ public interface AppointmentService {
 
     void cancelAppointment(UUID id); // cansel an appointment for patient
 
+    Set<AppointmentDto> getAppointments();
+
     Set<AppointmentDto> getActiveAppointmentsForPatient(UUID patientId);
 
     Set<AppointmentDto> getCompletedAppointmentsForPatient(UUID patientId);

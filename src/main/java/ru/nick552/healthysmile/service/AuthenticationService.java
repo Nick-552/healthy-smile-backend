@@ -12,4 +12,6 @@ public interface AuthenticationService {
     AuthResponse signUp(RegistrationRequest request);
 
     UserInfo getUser(String token);
+
+    UserInfo createUser(RegistrationRequest request);
 }

@@ -8,9 +8,8 @@ import ru.nick552.healthysmile.domain.repository.DoctorRepository;
 import ru.nick552.healthysmile.domain.repository.UserRepository;
 import ru.nick552.healthysmile.dto.request.AddDoctorRoleRequest;
 import ru.nick552.healthysmile.dto.request.UpdateDoctorRequest;
-import ru.nick552.healthysmile.exception.DoctorNotFoundException;
-import ru.nick552.healthysmile.exception.NoRightsException;
-import ru.nick552.healthysmile.exception.UserNotFoundException;
+import ru.nick552.healthysmile.exception.doctor.DoctorNotFoundException;
+import ru.nick552.healthysmile.exception.user.UserNotFoundException;
 import ru.nick552.healthysmile.model.Role;
 import ru.nick552.healthysmile.service.DoctorService;
 
@@ -25,22 +24,19 @@ public class DoctorServiceImpl implements DoctorService {
 
     private final UserRepository userRepository;
 
-
-
     @Override
     @Transactional
     public void addDoctor(AddDoctorRoleRequest request) {
         var user = userRepository
                 .findById(request.userId())
                 .orElseThrow(UserNotFoundException::new);
-        if (user.getRole() == Role.ADMIN) {
-            throw new NoRightsException();
+        if (!user.getRole().isHigherOrEqual(Role.DOCTOR)) {
+            user.setRole(Role.DOCTOR);
         }
-        user.setRole(Role.DOCTOR);
         var doctor = new DoctorEntity();
         doctor.setSpeciality(request.specialization());
         doctor.setInfo(request.info());
-        doctor.setPhotoLink(request.photo().toString());
+        doctor.setPhotoLink(request.photo());
         doctor.setId(request.userId());
         doctorRepository.makeDoctor(doctor);
     }
@@ -52,7 +48,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public void updateDoctor(UpdateDoctorRequest request) {
-        var doctor = doctorRepository.findById(request.doctorIid())
+        var doctor = doctorRepository.findById(request.doctorId())
                 .orElseThrow(DoctorNotFoundException::new);
 
         if (request.specialization() != null) {
@@ -62,7 +58,7 @@ public class DoctorServiceImpl implements DoctorService {
             doctor.setInfo(request.info());
         }
         if (request.photo() != null) {
-            doctor.setPhotoLink(request.photo().toString());
+            doctor.setPhotoLink(request.photo());
         }
     }
 

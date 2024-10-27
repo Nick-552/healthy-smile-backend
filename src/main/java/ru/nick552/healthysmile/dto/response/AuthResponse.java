@@ -8,7 +8,8 @@ import java.util.UUID;
 public record AuthResponse (
         String username,
         UUID id,
-        @JsonProperty("jwt_token") String jwtToken,
+        @JsonProperty("jwt_token")
+        String jwtToken,
         Role role
 ) {
 }

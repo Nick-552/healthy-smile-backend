@@ -1,13 +1,8 @@
 app:
   base-url: ${BASE_URL}
-
 spring:
   application:
     name: healthy-smile
-  security:
-    user:
-      name: ${ADMIN_NAME}
-      password: ${ADMIN_PASSWORD}
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DB_URL}
@@ -38,3 +33,6 @@ jwt:
 springdoc:
   swagger-ui:
     path: /swagger
+logging:
+  level:
+    org.springframework.http: TRACE

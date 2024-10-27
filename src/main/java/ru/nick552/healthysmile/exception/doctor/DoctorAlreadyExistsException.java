@@ -1,6 +1,7 @@
-package ru.nick552.healthysmile.exception;
+package ru.nick552.healthysmile.exception.doctor;
 
 import org.springframework.http.HttpStatus;
+import ru.nick552.healthysmile.exception.ApiException;
 
 public class DoctorAlreadyExistsException extends ApiException {
 

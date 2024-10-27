@@ -2,6 +2,7 @@ package ru.nick552.healthysmile.service.impl.jpa;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.nick552.healthysmile.domain.entity.AppointmentEntity;
 import ru.nick552.healthysmile.domain.repository.AppointmentRepository;
@@ -10,10 +11,10 @@ import ru.nick552.healthysmile.domain.repository.PatientRepository;
 import ru.nick552.healthysmile.domain.repository.UserRepository;
 import ru.nick552.healthysmile.dto.request.CreateAppointmentRequest;
 import ru.nick552.healthysmile.dto.response.AppointmentDto;
-import ru.nick552.healthysmile.exception.DoctorNotFoundException;
-import ru.nick552.healthysmile.exception.NoRightsException;
 import ru.nick552.healthysmile.exception.NoSuchAppointmentException;
-import ru.nick552.healthysmile.exception.UserNotFoundException;
+import ru.nick552.healthysmile.exception.auth.NoRightsException;
+import ru.nick552.healthysmile.exception.doctor.DoctorNotFoundException;
+import ru.nick552.healthysmile.exception.user.UserNotFoundException;
 import ru.nick552.healthysmile.model.Role;
 import ru.nick552.healthysmile.service.AppointmentService;
 import ru.nick552.healthysmile.util.UsernameExtractor;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Log4j2
 public class AppointmentServiceImpl implements AppointmentService {
 
     private final UserRepository userRepository;
@@ -33,7 +35,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final PatientRepository patientRepository;
 
     private final AppointmentRepository appointmentRepository;
-
 
     @Override
     @Transactional
@@ -107,6 +108,11 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new NoRightsException("Недостаточно прав для удаления приема");
         }
         appointment.setPatient(null);
+    }
+
+    @Override
+    public Set<AppointmentDto> getAppointments() {
+        return appointmentRepository.findAll().stream().map(AppointmentEntity::toDto).collect(Collectors.toSet());
     }
 
     @Override

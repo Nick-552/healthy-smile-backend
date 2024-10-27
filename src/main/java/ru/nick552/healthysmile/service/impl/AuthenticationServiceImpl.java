@@ -11,8 +11,8 @@ import ru.nick552.healthysmile.domain.repository.UserRepository;
 import ru.nick552.healthysmile.dto.request.AuthenticationRequest;
 import ru.nick552.healthysmile.dto.request.RegistrationRequest;
 import ru.nick552.healthysmile.dto.response.AuthResponse;
-import ru.nick552.healthysmile.exception.UserNotFoundException;
-import ru.nick552.healthysmile.exception.UsernameAlreadyTakenException;
+import ru.nick552.healthysmile.exception.user.UserNotFoundException;
+import ru.nick552.healthysmile.exception.user.UsernameAlreadyTakenException;
 import ru.nick552.healthysmile.model.Role;
 import ru.nick552.healthysmile.model.UserInfo;
 import ru.nick552.healthysmile.service.AuthenticationService;
@@ -90,5 +90,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 user.getPhone(),
                 user.getRole()
         );
+    }
+
+    @Override
+    public UserInfo createUser(RegistrationRequest request) {
+        var userEntity = UserEntity.builder()
+                .email(request.email())
+                .phone(request.phone())
+                .enabled(true)
+                .name(request.name())
+                .surname(request.surname())
+                .patronymic(request.patronymic())
+                .username(request.username())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.USER)
+                .build();
+        var user = userRepository.save(userEntity);
+        return user.getUserInfo();
     }
 }
